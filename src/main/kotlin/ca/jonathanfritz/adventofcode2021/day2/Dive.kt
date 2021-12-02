@@ -7,13 +7,40 @@ class Dive {
         var position = Position()
         instructions.forEach {
             position = when (it.first) {
-                "forward" -> position.copy(horizontal = position.horizontal + it.second, depth = position.depth)
-                "down" -> position.copy(horizontal = position.horizontal, depth = position.depth + it.second)
-                "up" -> position.copy(horizontal = position.horizontal, depth = position.depth - it.second)
+                "forward" -> position.copy(
+                    horizontal = position.horizontal + it.second,
+                    depth = position.depth
+                )
+                "down" -> position.copy(
+                    horizontal = position.horizontal,
+                    depth = position.depth + it.second
+                )
+                "up" -> position.copy(
+                    horizontal = position.horizontal,
+                    depth = position.depth - it.second
+                )
                 else -> position
             }
         }
-        print("Part 1: Horizontal position is ${position.horizontal}, vertical position is ${position.depth}, product is ${position.horizontal * position.depth}")
+        println("Part 1: Horizontal position is ${position.horizontal}, vertical position is ${position.depth}, " +
+                "product is ${position.horizontal * position.depth}")
+    }
+
+    fun part2(instructions: List<Pair<String, Int>>) {
+        var aim = 0
+        var position = Position()
+        instructions.forEach {
+            when (it.first) {
+                "forward" -> position = position.copy(
+                    horizontal = position.horizontal + it.second,
+                    depth = position.depth + (it.second * aim)
+                )
+                "down" -> aim += it.second
+                "up" -> aim -= it.second
+            }
+        }
+        println("Part 2: Horizontal position is ${position.horizontal}, depth is ${position.depth}, " +
+                "product is ${position.horizontal * position.depth}")
     }
 }
 
@@ -28,4 +55,5 @@ fun main() {
         direction to amount
     }
     dive.part1(instructions)
+    dive.part2(instructions)
 }
