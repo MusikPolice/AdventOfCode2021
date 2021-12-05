@@ -24,9 +24,31 @@ class GiantSquid {
         }
 
         // find the score of the winning board
-        // TODO: boards[56] has a bingo across the top row, and the sumOfUnmarkedNumbers() is calculated correctly - why is it broke?
         val score = (winner?.sumOfUnmarkedNumbers() ?: 0) * lastNumber
         println("Final score is $score")
+    }
+
+    fun part2(numbers: List<Int>, boards: MutableList<BingoBoard>) {
+        // play bingo
+        var lastWinner: BingoBoard? = null
+        var lastNumber = 0
+        for (number in numbers) {
+            println("Called $number")
+            for ((i, board) in boards.withIndex()) {
+                if (!board.hasBingo()) {
+                    board.call(number)
+                    if (board.hasBingo()) {
+                        println("Board ${i + 1} has a Bingo")
+                        lastWinner = board
+                        lastNumber = number
+                    }
+                }
+            }
+        }
+
+        // find the score of the winning board
+        val score = (lastWinner?.sumOfUnmarkedNumbers() ?: 0) * lastNumber
+        println("Last winner is Board ${boards.indexOf(lastWinner) + 1}. Final score is $score")
     }
 }
 
@@ -78,6 +100,14 @@ class BingoBoard(
         }
         return sum
     }
+
+    fun reset() {
+        for (row in 0..4) {
+            for (col in 0..4) {
+                board[row][col] = false
+            }
+        }
+    }
 }
 
 fun main() {
@@ -106,4 +136,6 @@ fun main() {
     }
 
     bd.part1(numbers, boards)
+    boards.forEach { it.reset() }
+    bd.part2(numbers, boards)
 }
